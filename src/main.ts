@@ -1,9 +1,24 @@
 import '@logseq/libs';
 
 
-logseq.ready(() => {
-	// logseq.App.showMsg("Hello World Logseq!");
-	logseq.UI.showMsg("Hello World Logseq!");
-}).catch(console.error);
+const main = async () => {
+	console.log('here');
+	logseq.App.registerCommandPalette(
+		// 'test',
+		{
+			key: 'xxxTest',
+			label: 'XXX test',
+			// desc: 'test description',
+			// palette?: booleanString,
+			// keybinding?: SimpleCommandKeybindingString,
+		},
+		async () => {
+			const page = await logseq.Editor.getCurrentPage();
+			const blocks = await logseq.Editor.getPageBlocksTree(page?.name);
+			console.log(blocks);
+		}
+	)
+};
 
-console.log(logseq.Editor);
+
+logseq.ready(main).catch(console.error);
