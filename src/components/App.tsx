@@ -1,6 +1,10 @@
 import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
 import CommandPalette, { Command } from 'react-command-palette';
 
+// @ts-ignore
+import theme from "../../node_modules/react-command-palette/dist/themes/sublime-theme";
+import "../../node_modules/react-command-palette/dist/themes/sublime.css";
+
 
 function App(props: {
 	blocks: BlockEntity[]
@@ -43,6 +47,7 @@ function App(props: {
 			closeOnSelect
 			highlightFirstSuggestion
 			hotKeys={[]}
+			theme={theme}
 			commands={items}
 			onHighlight={(item) => {
 				if (item) scrollTo(item.id as string);
