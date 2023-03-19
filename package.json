@@ -1,0 +1,20 @@
+{
+  "name": "logseq-plugin-go-to-symbol",
+  "version": "0.1.0",
+  "main": "dist/index.html",
+  "logseq": {
+    "id": "_s718rnfmy"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@logseq/libs": "^0.0.14"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0"
+  }
+}
