@@ -18,15 +18,19 @@
 			z-index: 9999;
 		}
 
-		button.atom-trigger {
-			display: none !important;
-		}
-
-		li[role=option] {
+		li[role=option],
+		li[role=option] * {
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			width: 100%;
 			overflow: hidden;
+		}
+
+		.sublime-container {
+			font-weight: unset !important;
+		}
+		.sublime-suggestion b {
+			font-weight: unset !important;
 		}
 	</style>
   </head>

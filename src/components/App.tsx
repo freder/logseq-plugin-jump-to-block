@@ -47,6 +47,7 @@ function App(props: {
 			closeOnSelect
 			highlightFirstSuggestion
 			hotKeys={[]}
+			trigger={null}
 			theme={theme}
 			commands={items}
 			onHighlight={(item) => {
