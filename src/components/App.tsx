@@ -1,18 +1,10 @@
 import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
-
-import { useState } from 'react';
-import CommandPalette, { filterItems, getItemIndex, JsonStructureItem } from 'react-cmdk';
-import 'react-cmdk/dist/cmdk.css';
+import CommandPalette, { Command } from 'react-command-palette';
 
 
 function App(props: {
 	blocks: BlockEntity[]
 }) {
-	console.log(props.blocks);
-	const [page, setPage] = useState('root');
-	const [open, setOpen] = useState<boolean>(true);
-	const [search, setSearch] = useState('');
-
 	const scrollTo = async (blockUuid: string) => {
 		const page = await logseq.Editor.getCurrentPage();
 		if (!page) { return; }
@@ -21,70 +13,32 @@ function App(props: {
 		);
 	}
 
-	const items: JsonStructureItem[] = [];
+	const items: Command[] = [];
 	props.blocks.forEach((block) => {
-		items.push({
-			id: block.uuid.toString(),
-			children: block.content,
-			closeOnSelect: true,
-			onClick: () => scrollTo(block.uuid),
-		})
+		const cmd: Command = {
+			// @ts-expect-error
+			id: block.uuid,
+			name: block.content,
+			command: () => scrollTo(block.uuid),
+			color: 'transparent',
+		};
+		items.push(cmd);
 	});
-
-	const entries = filterItems(
-		[{
-			id: 'toc',
-			items: items,
-			// [
-			// 	{
-			// 		id: "test",
-			// 		children: "test",
-			// 		// icon: "RectangleStackIcon",
-			// 		closeOnSelect: true,
-			// 		onClick: () => {
-			// 			// logseq.Editor.scrollToBlockInPage();
-			// 		},
-			// 	},
-			// ]
-		}],
-		search
-	);
 
 	return <div>
 		<CommandPalette
-			onChangeSearch={setSearch}
-			onChangeOpen={(open) => {
-				if (!open) {
-					logseq.hideMainUI()
-				}
-				setOpen(open);
+			open
+			closeOnSelect
+			highlightFirstSuggestion
+			hotKeys={[]}
+			commands={items}
+			onHighlight={(suggestion) => {
+				scrollTo(suggestion.id as string);
 			}}
-			// onChangeSelected={(idx: number) => {
-			// 	logseq.UI.showMsg(idx.toString());
-			// 	scrollTo(items[idx].id);
-			// }}
-			// selected={0}
-			search={search}
-			isOpen={open}
-			page={page}
-		>
-			<CommandPalette.Page id="root">
-				{entries.map((list) => (
-					<CommandPalette.List
-						key={list.id}
-						heading={list.heading}
-					>
-						{list.items.map(({ id, ...rest }) => (
-							<CommandPalette.ListItem
-								key={id}
-								index={getItemIndex(entries, id)}
-								{...rest}
-							/>
-						))}
-					</CommandPalette.List>
-				))}
-			</CommandPalette.Page>
-		</CommandPalette>
+			onRequestClose={() => {
+				logseq.hideMainUI();
+			}}
+		/>
 	</div>;
 }
 
