@@ -55,11 +55,15 @@ function App(props: {
 	return <CommandPalette
 		open
 		closeOnSelect
+		alwaysRenderCommands
 		highlightFirstSuggestion
+		resetInputOnOpen
+		placeholder="Type to filter..."
 		hotKeys={[]}
 		trigger={null}
 		theme={theme}
 		commands={items}
+		maxDisplayed={500} // hard max. limit
 		onHighlight={selectionHandler}
 		onSelect={selectionHandler}
 		onRequestClose={() => logseq.hideMainUI()}
