@@ -3,6 +3,7 @@ import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
 
 import React from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
+import markdownToTxt from 'markdown-to-txt';
 
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
@@ -32,7 +33,7 @@ function App(props: {
 		const cmd: Command = {
 			// @ts-expect-error
 			id: block.uuid,
-			name: '—'.repeat(depth) + ' ' + block.content,
+			name: '—'.repeat(depth) + ' ' + markdownToTxt(block.content),
 			command: () => scrollTo(block.uuid),
 			color: 'transparent',
 		};
