@@ -24,6 +24,16 @@ const selectionHandler = (item: Record<string, unknown>) => {
 };
 
 
+const prepareLabel = (blockContent: string) => {
+	return markdownToTxt(blockContent)
+		// ::collapsed true
+		.replaceAll(/[^ ]*:: [^ ]*/ig, '')
+		// {:width 400}
+		.replaceAll(/\{:.*\}/ig, '')
+		.trim();
+};
+
+
 const makeCommands = (
 	blocks: BlockEntity[],
 	maxDepth = Infinity
@@ -36,7 +46,7 @@ const makeCommands = (
 		const cmd: Command = {
 			// @ts-expect-error
 			id: block.uuid,
-			name: '—'.repeat(depth) + ' ' + markdownToTxt(block.content),
+			name: '—'.repeat(depth) + ' ' + prepareLabel(block.content),
 			command: () => scrollTo(block.uuid),
 			color: 'transparent',
 		};
