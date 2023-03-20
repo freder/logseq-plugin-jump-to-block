@@ -30,6 +30,9 @@ function App(props: {
 
 	const items: Command[] = [];
 	const recurse = (block: BlockEntity, depth: number) => {
+		if (depth > 3) { // TODO: make this configurable
+			return;
+		}
 		const cmd: Command = {
 			// @ts-expect-error
 			id: block.uuid,
@@ -38,9 +41,6 @@ function App(props: {
 			color: 'transparent',
 		};
 		items.push(cmd);
-		if (depth > 3) { // TODO: make this configurable
-			return;
-		}
 		const children = block.children || [];
 		if (children.length) {
 			(children as BlockEntity[]).forEach(
