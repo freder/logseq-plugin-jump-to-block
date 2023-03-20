@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
 import markdownToTxt from 'markdown-to-txt';
 
@@ -24,13 +24,13 @@ const selectionHandler = (item: Record<string, unknown>) => {
 };
 
 
-function App(props: {
-	blocks: BlockEntity[]
-}) {
-
+const makeCommands = (
+	blocks: BlockEntity[],
+	maxDepth = Infinity
+) => {
 	const items: Command[] = [];
 	const recurse = (block: BlockEntity, depth: number) => {
-		if (depth > 3) { // TODO: make this configurable
+		if (depth > maxDepth) {
 			return;
 		}
 		const cmd: Command = {
@@ -48,12 +48,45 @@ function App(props: {
 			);
 		}
 	};
-	props.blocks.forEach(
+	blocks.forEach(
 		(block) => recurse(block, 0)
 	);
+	return items;
+};
+
+
+function App() {
+	const [open, setOpen] = useState(false);
+	const [items, setItems] = useState<Command[]>([]);
+
+	useEffect(
+		() => {
+			const visibilityHandler = async ({ visible }: { visible: boolean }) => {
+				if (visible) {
+					const blocks = await logseq.Editor.getCurrentPageBlocksTree();
+					const maxDepth = 3; // TODO: make this configurable
+					const items = makeCommands(blocks, maxDepth);
+					setItems(items);
+					setOpen(true);
+				} else {
+					setOpen(false);
+					setItems([]);
+				}
+			};
+			logseq.on('ui:visible:changed', visibilityHandler);
+			return () => {
+				logseq.off('ui:visible:changed', visibilityHandler);
+			};
+		},
+		[]
+	);
+
+	const closeHandler = () => {
+		logseq.hideMainUI();
+	};
 
 	return <CommandPalette
-		open
+		open={open}
 		closeOnSelect
 		alwaysRenderCommands
 		highlightFirstSuggestion
@@ -66,7 +99,7 @@ function App(props: {
 		maxDisplayed={500} // hard max. limit
 		onHighlight={selectionHandler}
 		onSelect={selectionHandler}
-		onRequestClose={() => logseq.hideMainUI()}
+		onRequestClose={closeHandler}
 	/>;
 }
 

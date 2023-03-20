@@ -1,5 +1,4 @@
 import type {
-	BlockEntity,
 	SettingSchemaDesc,
 	SimpleCommandKeybinding
 } from '@logseq/libs/dist/LSPlugin';
@@ -34,31 +33,19 @@ const main = async () => {
 
 	logseq.useSettingsSchema(settings);
 
+	const mount = document.getElementById('mount') as HTMLElement;
+	const root = ReactDOM.createRoot(mount);
+	root.render(
+		// <React.StrictMode>
+		<App />
+		// </React.StrictMode>
+	);
+
 	const keyBinding: SimpleCommandKeybinding = {
 		// mode: 'editing', // 'global' | 'non-editing'
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		binding: logseq.settings![settingsKey],
 	};
-
-	const mount = document.getElementById('mount') as HTMLElement;
-	const model = {
-		show: (blocks: BlockEntity[]) => {
-			ReactDOM.createRoot(mount).render(
-				// <React.StrictMode>
-				<App blocks={blocks} />
-				// </React.StrictMode>
-			);
-			logseq.showMainUI();
-		},
-	};
-	// logseq.provideModel(model);
-
-	logseq.on('ui:visible:changed', async ({ visible }) => {
-		if (!visible) {
-			mount.style.display = 'none';
-			mount.innerHTML = '';
-		}
-	});
 
 	logseq.App.registerCommandPalette(
 		{
@@ -67,8 +54,7 @@ const main = async () => {
 			keybinding: keyBinding,
 		},
 		async () => {
-			const blocks = await logseq.Editor.getCurrentPageBlocksTree();
-			model.show(blocks);
+			logseq.showMainUI();
 		}
 	);
 };
