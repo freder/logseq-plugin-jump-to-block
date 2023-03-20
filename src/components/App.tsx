@@ -44,9 +44,9 @@ const selectionHandler = async (
 const prepareLabel = (blockContent: string) => {
 	return markdownToTxt(blockContent)
 		// ::collapsed true
-		.replaceAll(/[^ ]*:: [^ ]*/ig, '')
+		.replaceAll(/[^\W\n]+::\W[^\W]+/gmi, '')
 		// {:width 400}
-		.replaceAll(/\{:.*\}/ig, '')
+		.replaceAll(/\{:.*\}/gmi, '')
 		.trim();
 };
 
