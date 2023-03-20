@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "dist/index.html",
   "logseq": {
-    "id": "_s718rnfmy"
+    "id": "logseq-plugin-go-to-symbol"
   },
   "scripts": {
     "dev": "vite",

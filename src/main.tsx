@@ -38,7 +38,7 @@ const main = async () => {
 		{
 			key: "goToSymbol",
 			title: 'Go to symbol...',
-			description: "Jump to a heading within the current page",
+			description: "Jump to a block within the current page",
 			default: "mod+t",
 			type: "string",
 		},
