@@ -10,6 +10,12 @@ import theme from '../../node_modules/react-command-palette/dist/themes/sublime-
 import '../../node_modules/react-command-palette/dist/themes/sublime.css';
 
 
+type PathItem = {
+	uuid: string,
+	collapsed: boolean,
+};
+
+
 const scrollTo = async (blockUuid: string) => {
 	const page = await logseq.Editor.getCurrentPage();
 	if (!page) { return; }
@@ -19,7 +25,18 @@ const scrollTo = async (blockUuid: string) => {
 };
 
 
-const selectionHandler = (item: Record<string, unknown>) => {
+const selectionHandler = async (
+	item: Record<string, unknown>,
+	expand: boolean,
+) => {
+	if (!item) {
+		return;
+	}
+	if (expand) {
+		for (const pathItem of item.path as PathItem[]) {
+			await logseq.Editor.setBlockCollapsed(pathItem.uuid, false);
+		}
+	}
 	if (item) scrollTo(item.id as string);
 };
 
@@ -39,7 +56,11 @@ const makeCommands = (
 	maxDepth = Infinity
 ) => {
 	const items: Command[] = [];
-	const recurse = (block: BlockEntity, depth: number) => {
+	const recurse = (
+		block: BlockEntity,
+		depth: number,
+		path: Array<PathItem>
+	) => {
 		if (depth > maxDepth) {
 			return;
 		}
@@ -49,17 +70,25 @@ const makeCommands = (
 			name: '—'.repeat(depth) + ' ' + prepareLabel(block.content),
 			command: () => scrollTo(block.uuid),
 			color: 'transparent',
+			path: path,
 		};
 		items.push(cmd);
 		const children = block.children || [];
 		if (children.length) {
 			(children as BlockEntity[]).forEach(
-				(block) => recurse(block, depth + 1)
+				(block) => recurse(
+					block,
+					depth + 1,
+					[...path, {
+						uuid: block.uuid,
+						collapsed: block['collapsed?'],
+					}]
+				)
 			);
 		}
 	};
 	blocks.forEach(
-		(block) => recurse(block, 0)
+		(block) => recurse(block, 0, [])
 	);
 	return items;
 };
@@ -107,8 +136,8 @@ function App() {
 		theme={theme}
 		commands={items}
 		maxDisplayed={500} // hard max. limit
-		onHighlight={selectionHandler}
-		onSelect={selectionHandler}
+		onHighlight={(item) => selectionHandler(item, false)}
+		onSelect={(item) => selectionHandler(item, true)}
 		onRequestClose={closeHandler}
 	/>;
 }
