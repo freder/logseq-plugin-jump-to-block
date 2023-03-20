@@ -27,7 +27,7 @@ function App(props: {
 			color: 'transparent',
 		};
 		items.push(cmd);
-		if (depth > 3) {
+		if (depth > 3) { // TODO: make this configurable
 			return;
 		}
 		const children = block.children || [];
@@ -41,6 +41,10 @@ function App(props: {
 		(block) => recurse(block, 0)
 	);
 
+	const selectionHandler = (item: Record<string, unknown>) => {
+		if (item) scrollTo(item.id as string);
+	};
+
 	return <div>
 		<CommandPalette
 			open
@@ -50,15 +54,9 @@ function App(props: {
 			trigger={null}
 			theme={theme}
 			commands={items}
-			onHighlight={(item) => {
-				if (item) scrollTo(item.id as string);
-			}}
-			onSelect={(item) => {
-				if (item) scrollTo(item.id as string);
-			}}
-			onRequestClose={() => {
-				logseq.hideMainUI();
-			}}
+			onHighlight={selectionHandler}
+			onSelect={selectionHandler}
+			onRequestClose={() => logseq.hideMainUI()}
 		/>
 	</div>;
 }
