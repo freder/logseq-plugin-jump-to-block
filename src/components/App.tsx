@@ -9,16 +9,23 @@ import theme from '../../node_modules/react-command-palette/dist/themes/sublime-
 import '../../node_modules/react-command-palette/dist/themes/sublime.css';
 
 
+const scrollTo = async (blockUuid: string) => {
+	const page = await logseq.Editor.getCurrentPage();
+	if (!page) { return; }
+	logseq.Editor.scrollToBlockInPage(
+		page.name, blockUuid
+	);
+};
+
+
+const selectionHandler = (item: Record<string, unknown>) => {
+	if (item) scrollTo(item.id as string);
+};
+
+
 function App(props: {
 	blocks: BlockEntity[]
 }) {
-	const scrollTo = async (blockUuid: string) => {
-		const page = await logseq.Editor.getCurrentPage();
-		if (!page) { return; }
-		logseq.Editor.scrollToBlockInPage(
-			page.name, blockUuid
-		);
-	};
 
 	const items: Command[] = [];
 	const recurse = (block: BlockEntity, depth: number) => {
@@ -44,24 +51,18 @@ function App(props: {
 		(block) => recurse(block, 0)
 	);
 
-	const selectionHandler = (item: Record<string, unknown>) => {
-		if (item) scrollTo(item.id as string);
-	};
-
-	return <div>
-		<CommandPalette
-			open
-			closeOnSelect
-			highlightFirstSuggestion
-			hotKeys={[]}
-			trigger={null}
-			theme={theme}
-			commands={items}
-			onHighlight={selectionHandler}
-			onSelect={selectionHandler}
-			onRequestClose={() => logseq.hideMainUI()}
-		/>
-	</div>;
+	return <CommandPalette
+		open
+		closeOnSelect
+		highlightFirstSuggestion
+		hotKeys={[]}
+		trigger={null}
+		theme={theme}
+		commands={items}
+		onHighlight={selectionHandler}
+		onSelect={selectionHandler}
+		onRequestClose={() => logseq.hideMainUI()}
+	/>;
 }
 
 export default App;
