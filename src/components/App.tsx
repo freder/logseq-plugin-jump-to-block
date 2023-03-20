@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
+
+import React from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
 
 // @ts-ignore
-import theme from "../../node_modules/react-command-palette/dist/themes/sublime-theme";
-import "../../node_modules/react-command-palette/dist/themes/sublime.css";
+import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
+import '../../node_modules/react-command-palette/dist/themes/sublime.css';
 
 
 function App(props: {
@@ -15,7 +18,7 @@ function App(props: {
 		logseq.Editor.scrollToBlockInPage(
 			page.name, blockUuid
 		);
-	}
+	};
 
 	const items: Command[] = [];
 	const recurse = (block: BlockEntity, depth: number) => {
@@ -61,4 +64,4 @@ function App(props: {
 	</div>;
 }
 
-export default App
+export default App;

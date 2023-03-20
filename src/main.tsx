@@ -19,9 +19,9 @@ const settings: SettingSchemaDesc[] = [
 	{
 		key: settingsKey,
 		title: settingsLabel,
-		description: "Jump to a block within the current page",
-		default: "mod+t",
-		type: "string",
+		description: 'Jump to a block within the current page',
+		default: 'mod+t',
+		type: 'string',
 	},
 ];
 
@@ -36,6 +36,7 @@ const main = async () => {
 
 	const keyBinding: SimpleCommandKeybinding = {
 		// mode: 'editing', // 'global' | 'non-editing'
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		binding: logseq.settings![settingsKey],
 	};
 
@@ -52,12 +53,12 @@ const main = async () => {
 	};
 	// logseq.provideModel(model);
 
-	logseq.on("ui:visible:changed", async ({ visible }) => {
+	logseq.on('ui:visible:changed', async ({ visible }) => {
 		if (!visible) {
 			mount.style.display = 'none';
-			mount.innerHTML = "";
+			mount.innerHTML = '';
 		}
-	})
+	});
 
 	logseq.App.registerCommandPalette(
 		{
@@ -69,7 +70,7 @@ const main = async () => {
 			const blocks = await logseq.Editor.getCurrentPageBlocksTree();
 			model.show(blocks);
 		}
-	)
+	);
 };
 
 
