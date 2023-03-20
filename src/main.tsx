@@ -46,7 +46,7 @@ const main = async () => {
 	logseq.useSettingsSchema(settings);
 
 	const keyBinding: SimpleCommandKeybinding = {
-		mode: 'editing', // 'global' | 'non-editing'
+		// mode: 'editing', // 'global' | 'non-editing'
 		binding: logseq.settings!.goToSymbol,
 		// mac?: string;
 	};
