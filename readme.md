@@ -6,4 +6,4 @@
 
 Execute the `Go to symbol...` command via the command palette, or via keyboard shortcut (default: `mod-t`).
 
-<!-- TODO: insert gif -->
+<img src="./screenrecording.gif" alt="screen recording" width="700" />
