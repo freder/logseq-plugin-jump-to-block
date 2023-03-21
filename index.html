@@ -23,7 +23,11 @@
 
 		.sublime-modal {
 			width: 470px !important;
-			left: 61.4% !important;
+			/* logseq left panel width: 246px */
+			/* logseq content width: 810px */
+			left: calc(246px + 0.5 * calc(100vw - 246px) - calc(0.5 * 130px)) !important;
+			margin: 0 !important;
+			transform: none !important;
 		}
 		.sublime-container {
 			font-weight: unset !important;
