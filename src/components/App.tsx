@@ -98,11 +98,18 @@ function App() {
 	const [open, setOpen] = useState(false);
 	const [items, setItems] = useState<Command[]>([]);
 
+	const closeHandler = () => {
+		logseq.hideMainUI();
+	};
+
 	useEffect(
 		() => {
 			const visibilityHandler = async ({ visible }: { visible: boolean }) => {
 				if (visible) {
 					const blocks = await logseq.Editor.getCurrentPageBlocksTree();
+					if ((blocks || []).length === 0) {
+						return closeHandler();
+					}
 					const maxDepth = 3; // TODO: make this configurable
 					const items = makeCommands(blocks, maxDepth);
 					setItems(items);
@@ -119,10 +126,6 @@ function App() {
 		},
 		[]
 	);
-
-	const closeHandler = () => {
-		logseq.hideMainUI();
-	};
 
 	return <CommandPalette
 		open={open}
