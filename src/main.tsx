@@ -10,10 +10,10 @@ import '@logseq/libs';
 import App from './components/App';
 
 
-const cmdKey = 'goToSymbol';
-const cmdLabel = 'Go to symbol...';
-const settingsKey = 'goToSymbol';
-const settingsLabel = 'Go to symbol...';
+const cmdKey = 'jumpToBlock';
+const cmdLabel = 'Jump to block…';
+const settingsKey = cmdKey;
+const settingsLabel = cmdLabel;
 const settings: SettingSchemaDesc[] = [
 	{
 		key: settingsKey,
