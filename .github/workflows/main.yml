@@ -8,11 +8,11 @@ env:
 # Controls when the action will run.
 on:
   push:
-	tags:
-		- "*"
-    # branches:
-    #   - "master"
-  # Allows you to run this workflow manually from the Actions tab
+    tags:
+      - "*"
+      # branches:
+      #   - "master"
+    # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -30,8 +30,9 @@ jobs:
           node-version: "18"
       - run: npm install
       - run: npm run build
-    #   - name: Install zip
-    #     uses: montudor/action-zip@v1
+      - name: Install zip
+        uses: montudor/action-zip@v1
+      - run: zip -r dist.zip ./dist package.json
     #   - name: Release
     #     run: npx semantic-release
     #     env:
@@ -47,3 +48,12 @@ jobs:
         #   body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ github.token }}
+      - name: upload artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist.zip
+          asset_name: ${{ env.PLUGIN_NAME }}.zip
+          asset_content_type: application/zip
