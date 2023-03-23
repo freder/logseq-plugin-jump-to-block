@@ -33,9 +33,11 @@ const selectionHandler = async (
 		return;
 	}
 	if (expand) {
-		for (const pathItem of item.path as PathItem[]) {
-			await logseq.Editor.setBlockCollapsed(pathItem.uuid, false);
-		}
+		await Promise.all(
+			(item.path as PathItem[])
+				.filter((pathItem) => pathItem.collapsed)
+				.map(({ uuid }) => logseq.Editor.setBlockCollapsed(uuid, false))
+		);
 	}
 	if (item) scrollTo(item.id as string);
 };
