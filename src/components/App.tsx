@@ -4,6 +4,7 @@ import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
 import React, { useEffect, useState } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
 import markdownToTxt from 'markdown-to-txt';
+import * as R from 'ramda';
 
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
@@ -34,7 +35,7 @@ const selectionHandler = async (
 	}
 	if (expand) {
 		await Promise.all(
-			(item.path as PathItem[])
+			R.dropLast(1, item.path as PathItem[])
 				.filter((pathItem) => pathItem.collapsed)
 				.map(({ uuid }) => logseq.Editor.setBlockCollapsed(uuid, false))
 		);
