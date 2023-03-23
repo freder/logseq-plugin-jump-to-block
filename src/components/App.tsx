@@ -19,10 +19,10 @@ type PathItem = {
 
 const scrollTo = async (blockUuid: string) => {
 	const page = await logseq.Editor.getCurrentPage();
-	if (!page) { return; }
-	logseq.Editor.scrollToBlockInPage(
-		page.name, blockUuid
-	);
+	if (!page) {
+		return console.error('failed to get current page');
+	}
+	logseq.Editor.scrollToBlockInPage(page.name, blockUuid);
 };
 
 
@@ -31,7 +31,7 @@ const selectionHandler = async (
 	expand: boolean,
 ) => {
 	if (!item) {
-		return;
+		return console.info('nothing selected');
 	}
 	if (expand) {
 		await Promise.all(
