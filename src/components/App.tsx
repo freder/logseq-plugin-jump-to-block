@@ -67,10 +67,15 @@ const makeCommands = (
 		if (depth > maxDepth) {
 			return;
 		}
+		const blockContent = (block.content || '').trim();
+		// ignore empty blocks
+		if (blockContent === '') {
+			return;
+		}
 		const cmd: Command = {
 			// @ts-expect-error
 			id: block.uuid,
-			name: '—'.repeat(depth) + ' ' + prepareLabel(block.content),
+			name: '—'.repeat(depth) + ' ' + prepareLabel(blockContent),
 			command: () => scrollTo(block.uuid),
 			color: 'transparent',
 			path: path,
