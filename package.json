@@ -1,6 +1,6 @@
 {
   "name": "logseq-plugin-jump-to-block",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/index.html",
   "logseq": {
     "id": "logseq-plugin-jump-to-block"
@@ -16,11 +16,13 @@
     "@logseq/libs": "^0.0.14",
     "lodash": "^4.17.21",
     "markdown-to-txt": "^2.0.1",
+    "ramda": "^0.28.0",
     "react": "^18.2.0",
     "react-command-palette": "^0.22.1",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/ramda": "^0.28.23",
     "@types/react": "^18.0.28",
     "@types/react-command-palette": "^0.18.1",
     "@types/react-dom": "^18.0.11",

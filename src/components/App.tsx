@@ -4,6 +4,7 @@ import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
 import React, { useEffect, useState } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
 import markdownToTxt from 'markdown-to-txt';
+import * as R from 'ramda';
 
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
@@ -18,10 +19,10 @@ type PathItem = {
 
 const scrollTo = async (blockUuid: string) => {
 	const page = await logseq.Editor.getCurrentPage();
-	if (!page) { return; }
-	logseq.Editor.scrollToBlockInPage(
-		page.name, blockUuid
-	);
+	if (!page) {
+		return console.error('failed to get current page');
+	}
+	logseq.Editor.scrollToBlockInPage(page.name, blockUuid);
 };
 
 
@@ -30,12 +31,14 @@ const selectionHandler = async (
 	expand: boolean,
 ) => {
 	if (!item) {
-		return;
+		return console.info('nothing selected');
 	}
 	if (expand) {
-		for (const pathItem of item.path as PathItem[]) {
-			await logseq.Editor.setBlockCollapsed(pathItem.uuid, false);
-		}
+		await Promise.all(
+			R.dropLast(1, item.path as PathItem[])
+				.filter((pathItem) => pathItem.collapsed)
+				.map(({ uuid }) => logseq.Editor.setBlockCollapsed(uuid, false))
+		);
 	}
 	if (item) scrollTo(item.id as string);
 };
