@@ -18,10 +18,19 @@ type PathItem = {
 
 
 const scrollTo = async (blockUuid: string) => {
-	const page = await logseq.Editor.getCurrentPage();
-	if (!page) {
-		return console.error('failed to get current page');
+	const pageOrBlock = (await logseq.Editor.getCurrentPage());
+	const isBlock = ('content' in (pageOrBlock || {}));
+	if (!pageOrBlock) {
+		return console.error('failed to get page or block');
 	}
+	const page = isBlock
+		? await logseq.Editor.getPage(pageOrBlock.page.id)
+		: pageOrBlock;
+	if (!page) {
+		return console.error('failed to get page');
+	}
+	// TODO: how to scroll to block in sub-tree without leaving the sub-tree?
+	// `scrollToBlockInPage()` will open the entire page
 	logseq.Editor.scrollToBlockInPage(page.name, blockUuid);
 };
 
@@ -31,7 +40,7 @@ const selectionHandler = async (
 	expand: boolean,
 ) => {
 	if (!item) {
-		return console.info('nothing selected');
+		return;
 	}
 	if (expand) {
 		await Promise.all(
@@ -114,10 +123,29 @@ function App() {
 		() => {
 			const visibilityHandler = async ({ visible }: { visible: boolean }) => {
 				if (visible) {
-					const blocks = await logseq.Editor.getCurrentPageBlocksTree();
+					const pageOrBlock = await logseq.Editor.getCurrentPage();
+					if (!pageOrBlock) {
+						return closeHandler();
+					}
+
+					// NOTE: `logseq.Editor.getCurrentPageBlocksTree()` won't return anything if
+					// we're in a sub-tree rather than a full page.
+					let blocks: BlockEntity[] = [];
+					if ('content' in pageOrBlock) {
+						const block = await logseq.Editor.getBlock(
+							(pageOrBlock as BlockEntity).uuid,
+							{ includeChildren: true }
+						);
+						if (block) {
+							blocks = [block];
+						}
+					} else {
+						blocks = await logseq.Editor.getCurrentPageBlocksTree();
+					}
 					if ((blocks || []).length === 0) {
 						return closeHandler();
 					}
+
 					const maxDepth = 3; // TODO: make this configurable
 					const items = makeCommands(blocks, maxDepth);
 					setItems(items);
