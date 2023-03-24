@@ -1,6 +1,6 @@
 {
   "name": "logseq-plugin-jump-to-block",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "dist/index.html",
   "logseq": {
     "id": "logseq-plugin-jump-to-block"
@@ -14,7 +14,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
     "@logseq/libs": "^0.0.14",
     "lodash": "^4.17.21",
     "markdown-to-txt": "^2.0.1",
