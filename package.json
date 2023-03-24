@@ -9,6 +9,7 @@
     "lint": "eslint ./src",
     "check": "tsc --noEmit",
     "dev": "vite",
+    "watch": "vite build --watch",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
