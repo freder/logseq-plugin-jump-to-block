@@ -31,7 +31,7 @@ const selectionHandler = async (
 	expand: boolean,
 ) => {
 	if (!item) {
-		return console.info('nothing selected');
+		return;
 	}
 	if (expand) {
 		await Promise.all(
