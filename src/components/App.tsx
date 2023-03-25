@@ -85,7 +85,7 @@ const makeCommands = (
 		const cmd: Command = {
 			// @ts-expect-error
 			id: block.uuid,
-			name: '—'.repeat(depth) + ' ' + prepareLabel(blockContent),
+			name: prepareLabel(blockContent),
 			command: () => scrollTo(block.uuid),
 			color: 'transparent',
 			path: path,
@@ -204,6 +204,9 @@ function App() {
 				background-color: ${bgSelection} !important;
 				border: solid 3px ${bg} !important;
 			}
+			.indentation {
+				color: ${bgSelection} !important;
+			}
 		`} />
 		<CommandPalette
 			open={open}
@@ -220,6 +223,14 @@ function App() {
 			onHighlight={(item) => selectionHandler(item, false)}
 			onSelect={(item) => selectionHandler(item, true)}
 			onRequestClose={closeHandler}
+			renderCommand={(cmd) => {
+				// @ts-expect-error
+				const depth = cmd.path.length;
+				return <div>
+					<span className='indentation'>{'—'.repeat(depth)}</span>
+					{' '}{cmd.name}
+				</div>;
+			}}
 		/>
 	</Fragment>;
 }
