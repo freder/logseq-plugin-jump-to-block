@@ -60,6 +60,7 @@ const prepareLabel = (blockContent: string) => {
 		.replaceAll(/[^\W\n]+::\W[^\W]+/gmi, '')
 		// {:width 400}
 		.replaceAll(/\{:.*\}/gmi, '')
+		.replaceAll(/^(TODO|DOING|DONE) /gmi, '')
 		.trim();
 };
 
