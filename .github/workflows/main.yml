@@ -30,6 +30,7 @@ jobs:
           node-version: "18"
       - run: npm install
       - run: npm run build
+      - run: node scripts/make-release-note.js
       - name: Install zip
         uses: montudor/action-zip@v1
       - run: zip -r dist.zip ./dist package.json
@@ -45,7 +46,7 @@ jobs:
           prerelease: false
           release_name: ${{ steps.version.outputs.version }}
           tag_name: ${{ github.ref }}
-        #   body_path: CHANGELOG.md
+          body_path: release-note.md
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: upload artifact
