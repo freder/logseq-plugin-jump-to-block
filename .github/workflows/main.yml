@@ -34,10 +34,6 @@ jobs:
       - name: Install zip
         uses: montudor/action-zip@v1
       - run: zip -r dist.zip ./dist package.json
-    #   - name: Release
-    #     run: npx semantic-release
-    #     env:
-    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: release
         uses: actions/create-release@v1
         id: create_release
