@@ -2,6 +2,12 @@
 
 
 ## 1.2.2
+### Added
+- Toolbar button (#7, thanks to @YU000jp)
+- Setting to autmatically open the palette on opening a page (#7, thanks to @YU000jp)
+
+
+## 1.2.2
 
 ### Added
 - Changelog / release notes
