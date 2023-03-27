@@ -22,6 +22,13 @@ const settings: SettingSchemaDesc[] = [
 		default: 'mod+t',
 		type: 'string',
 	},
+	{
+		key: "AutoMode",
+		title: "Switch AutoMode",
+		description: 'Run every time open (Valid for non-journal page)',
+		default: false,
+		type: 'boolean',
+	},
 ];
 
 
@@ -41,6 +48,27 @@ const main = async () => {
 		// </React.StrictMode>
 	);
 
+	//AutoMode
+	const PageSet = new Set();
+	logseq.App.onRouteChanged(async (e) => {
+		const AutoMode = logseq.settings?.AutoMode || "";
+		if (AutoMode === true) {
+			if (e && e.template === "/page/:name") {
+				if (!PageSet.has(e.path)) {
+					PageSet.clear();
+					logseq.showMainUI({ autoFocus: false });
+				}
+				await PageSet.add(e.path);
+			}
+		}
+	});
+
+	//toolbar icon
+	logseq.App.registerUIItem("toolbar", {
+		key: "jump-to-block",
+		template: `<div data-on-click="ToolbarJumpToBlock" style="font-size:20px">✈️</div>\n`,
+	});
+
 	const keyBinding: SimpleCommandKeybinding = {
 		// mode: 'editing', // 'global' | 'non-editing'
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -54,10 +82,15 @@ const main = async () => {
 			keybinding: keyBinding,
 		},
 		async () => {
-			logseq.showMainUI();
+			logseq.showMainUI({ autoFocus: false });
 		}
 	);
 };
 
+const model = {
+	ToolbarJumpToBlock() {
+		logseq.showMainUI({ autoFocus: false });
+	}
+};
 
-logseq.ready(main).catch(console.error);
+logseq.ready(model, main).catch(console.error);
