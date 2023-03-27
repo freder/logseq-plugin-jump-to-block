@@ -7,6 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@logseq/libs';
 
+import { makeToolbarIcon } from './toolbar';
 import App from './components/App';
 
 
@@ -24,8 +25,8 @@ const settings: SettingSchemaDesc[] = [
 	},
 	{
 		key: 'autoOpen',
-		title: 'Switch autoOpen',
-		description: 'Run every time open (Valid for non-journal page)',
+		title: 'Auto-open palette',
+		description: 'Autmatically open the palette on opening a page',
 		default: false,
 		type: 'boolean',
 	},
@@ -69,7 +70,7 @@ const main = async () => {
 		{
 			key: 'jump-to-block',
 			// TODO: add icon
-			template: '<div data-on-click="toolbarJumpToBlock" style="font-size:20px">✈️</div>\n',
+			template: `${makeToolbarIcon(cmdLabel)}\n`,
 		}
 	);
 
