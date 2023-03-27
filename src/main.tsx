@@ -23,8 +23,8 @@ const settings: SettingSchemaDesc[] = [
 		type: 'string',
 	},
 	{
-		key: "AutoMode",
-		title: "Switch AutoMode",
+		key: 'autoOpen',
+		title: 'Switch autoOpen',
 		description: 'Run every time open (Valid for non-journal page)',
 		default: false,
 		type: 'boolean',
@@ -48,26 +48,30 @@ const main = async () => {
 		// </React.StrictMode>
 	);
 
-	//AutoMode
+	// auto open
 	const PageSet = new Set();
-	logseq.App.onRouteChanged(async (e) => {
-		const AutoMode = logseq.settings?.AutoMode || "";
-		if (AutoMode === true) {
-			if (e && e.template === "/page/:name") {
-				if (!PageSet.has(e.path)) {
+	logseq.App.onRouteChanged(async (event) => {
+		const autoOpen = logseq.settings?.autoOpen || '';
+		if (autoOpen === true) {
+			if (event && event.template === '/page/:name') {
+				if (!PageSet.has(event.path)) {
 					PageSet.clear();
 					logseq.showMainUI({ autoFocus: false });
 				}
-				await PageSet.add(e.path);
+				await PageSet.add(event.path);
 			}
 		}
 	});
 
-	//toolbar icon
-	logseq.App.registerUIItem("toolbar", {
-		key: "jump-to-block",
-		template: `<div data-on-click="ToolbarJumpToBlock" style="font-size:20px">✈️</div>\n`,
-	});
+	// toolbar icon
+	logseq.App.registerUIItem(
+		'toolbar',
+		{
+			key: 'jump-to-block',
+			// TODO: add icon
+			template: '<div data-on-click="toolbarJumpToBlock" style="font-size:20px">✈️</div>\n',
+		}
+	);
 
 	const keyBinding: SimpleCommandKeybinding = {
 		// mode: 'editing', // 'global' | 'non-editing'
@@ -88,7 +92,7 @@ const main = async () => {
 };
 
 const model = {
-	ToolbarJumpToBlock() {
+	toolbarJumpToBlock() {
 		logseq.showMainUI({ autoFocus: false });
 	}
 };
