@@ -127,6 +127,7 @@ function App() {
 				if (visible) {
 					const pageOrBlock = await logseq.Editor.getCurrentPage();
 					if (!pageOrBlock) {
+						logseq.UI.showMsg('This page is not supported', 'warning');
 						return closeHandler();
 					}
 

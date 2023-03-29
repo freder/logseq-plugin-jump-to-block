@@ -1,5 +1,9 @@
 # Changelog
 
+## x.x.x
+### Added
+- Show notification when current page is not supported (e.g. `Journals`)
+
 
 ## 1.3.0
 ### Added
