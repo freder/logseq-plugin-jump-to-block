@@ -79,10 +79,13 @@ const makeCommands = (
 			return;
 		}
 		const blockContent = (block.content || '').trim();
+
 		// ignore empty blocks
-		if (blockContent === '') {
-			return;
-		}
+		if (blockContent === '') { return; }
+
+		// ignore horizontal lines
+		if (blockContent === '---') { return; }
+
 		const cmd: Command = {
 			// @ts-expect-error
 			id: block.uuid,
