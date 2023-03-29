@@ -3,9 +3,10 @@ import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
 
 import React, { useEffect, useState, Fragment } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
-import markdownToTxt from 'markdown-to-txt';
 import * as R from 'ramda';
 import { Global, css } from '@emotion/react';
+
+import { prepareLabel } from '../utils';
 
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
@@ -51,17 +52,6 @@ const selectionHandler = async (
 		);
 	}
 	if (item) scrollTo(item.id as string);
-};
-
-
-const prepareLabel = (blockContent: string) => {
-	return markdownToTxt(blockContent)
-		// ::collapsed true
-		.replaceAll(/[^\W\n]+::\W[^\W]+/gmi, '')
-		// {:width 400}
-		.replaceAll(/\{:.*\}/gmi, '')
-		.replaceAll(/^(TODO|DOING|DONE) /gmi, '')
-		.trim();
 };
 
 
