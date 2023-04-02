@@ -3,6 +3,7 @@
 ## x.x.x
 ### Added
 - Show notification when current page is not supported (e.g. `Journals`)
+- Ignore horizonal lines (`---`)
 
 
 ## 1.3.0
