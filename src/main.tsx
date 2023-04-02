@@ -69,7 +69,6 @@ const main = async () => {
 		'toolbar',
 		{
 			key: 'jump-to-block',
-			// TODO: add icon
 			template: `${makeToolbarIcon(cmdLabel)}\n`,
 		}
 	);
