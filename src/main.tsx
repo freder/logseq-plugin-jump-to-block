@@ -26,7 +26,7 @@ const settings: SettingSchemaDesc[] = [
 	{
 		key: 'autoOpen',
 		title: 'Auto-open palette',
-		description: 'Autmatically open the palette on opening a page',
+		description: 'Automatically open the palette on opening a page',
 		default: false,
 		type: 'boolean',
 	},
