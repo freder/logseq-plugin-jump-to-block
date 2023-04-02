@@ -4,12 +4,13 @@
   "main": "dist/index.html",
   "logseq": {
     "id": "logseq-plugin-jump-to-block",
-	"title": "Jump to Block",
-	"icon": "marketplace/icon.png"
+    "title": "Jump to Block",
+    "icon": "marketplace/icon.png"
   },
   "scripts": {
     "lint": "eslint ./src",
     "check": "tsc --noEmit",
+    "test": "jest",
     "dev": "vite",
     "watch": "vite build --watch",
     "build": "tsc && vite build",
@@ -26,6 +27,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.5.0",
+    "@types/jest": "^29.5.1",
     "@types/ramda": "^0.28.23",
     "@types/react": "^18.0.28",
     "@types/react-command-palette": "^0.18.1",
@@ -34,8 +37,11 @@
     "@vitejs/plugin-react": "^3.1.0",
     "eslint": "^8.36.0",
     "eslint-plugin-functional": "^5.0.6",
+    "eslint-plugin-jest": "^27.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
     "typescript": "^5.0.3",
     "vite": "^4.2.0"
   }
