@@ -3,9 +3,10 @@ import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
 
 import React, { useEffect, useState, Fragment } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
-import markdownToTxt from 'markdown-to-txt';
 import * as R from 'ramda';
 import { Global, css } from '@emotion/react';
+
+import { prepareLabel } from '../utils';
 
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
@@ -54,17 +55,6 @@ const selectionHandler = async (
 };
 
 
-const prepareLabel = (blockContent: string) => {
-	return markdownToTxt(blockContent)
-		// ::collapsed true
-		.replaceAll(/[^\W\n]+::\W[^\W]+/gmi, '')
-		// {:width 400}
-		.replaceAll(/\{:.*\}/gmi, '')
-		.replaceAll(/^(TODO|DOING|DONE) /gmi, '')
-		.trim();
-};
-
-
 const makeCommands = (
 	blocks: BlockEntity[],
 	maxDepth = Infinity
@@ -79,10 +69,13 @@ const makeCommands = (
 			return;
 		}
 		const blockContent = (block.content || '').trim();
+
 		// ignore empty blocks
-		if (blockContent === '') {
-			return;
-		}
+		if (blockContent === '') { return; }
+
+		// ignore horizontal lines
+		if (blockContent === '---') { return; }
+
 		const cmd: Command = {
 			// @ts-expect-error
 			id: block.uuid,
@@ -127,6 +120,7 @@ function App() {
 				if (visible) {
 					const pageOrBlock = await logseq.Editor.getCurrentPage();
 					if (!pageOrBlock) {
+						logseq.UI.showMsg('This page is not supported', 'warning');
 						return closeHandler();
 					}
 
