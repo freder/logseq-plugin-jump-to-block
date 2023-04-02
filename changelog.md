@@ -1,6 +1,6 @@
 # Changelog
 
-## x.x.x
+## 1.3.1
 ### Added
 - Show notification when current page is not supported (e.g. `Journals`)
 - Ignore horizonal lines (`---`)
