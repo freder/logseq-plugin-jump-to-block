@@ -1,6 +1,6 @@
 {
   "name": "logseq-plugin-jump-to-block",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "main": "dist/index.html",
   "logseq": {
     "id": "logseq-plugin-jump-to-block"
@@ -34,7 +34,7 @@
     "eslint-plugin-functional": "^5.0.6",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "typescript": "^4.9.3",
+    "typescript": "^5.0.3",
     "vite": "^4.2.0"
   }
 }
