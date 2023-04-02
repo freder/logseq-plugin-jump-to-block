@@ -19,20 +19,20 @@ type PathItem = {
 
 
 const scrollTo = async (blockUuid: string) => {
-	const pageOrBlock = (await logseq.Editor.getCurrentPage());
-	const isBlock = ('content' in (pageOrBlock || {}));
-	if (!pageOrBlock) {
-		return console.error('failed to get page or block');
+	const currentBlock: any = logseq.Editor.getCurrentBlock();
+	if (blockUuid === currentBlock?.uuid) {
+		return;
 	}
-	const page = isBlock
-		? await logseq.Editor.getPage(pageOrBlock.page.id)
-		: pageOrBlock;
-	if (!page) {
-		return console.error('failed to get page');
-	}
+	const currentPage: any = await logseq.Editor.getCurrentPage();
+	const anchor = `block-content-` + blockUuid;
 	// TODO: how to scroll to block in sub-tree without leaving the sub-tree?
 	// `scrollToBlockInPage()` will open the entire page
-	logseq.Editor.scrollToBlockInPage(page.name, blockUuid);
+	if (currentPage?.name) {
+		//logseq.Editor.scrollToBlockInPage(currentPage.name, blockUuid);
+		if (blockUuid !== currentPage?.uuid) {
+			logseq.App.pushState('page', { name: currentPage.name }, { anchor });
+		}
+	}
 };
 
 

@@ -26,7 +26,7 @@ const settings: SettingSchemaDesc[] = [
 	{
 		key: 'autoOpen',
 		title: 'Auto-open palette',
-		description: 'Autmatically open the palette on opening a page',
+		description: 'Automatically open the palette on opening a page',
 		default: false,
 		type: 'boolean',
 	},
@@ -50,16 +50,16 @@ const main = async () => {
 	);
 
 	// auto open
-	const PageSet = new Set();
+	let PageSet = "";
 	logseq.App.onRouteChanged(async (event) => {
 		const autoOpen = logseq.settings?.autoOpen || '';
 		if (autoOpen === true) {
 			if (event && event.template === '/page/:name') {
-				if (!PageSet.has(event.path)) {
-					PageSet.clear();
+				if (PageSet !== event.path) {
+					PageSet = "";
 					logseq.showMainUI({ autoFocus: false });
 				}
-				await PageSet.add(event.path);
+				PageSet = event.path;
 			}
 		}
 	});
@@ -69,7 +69,6 @@ const main = async () => {
 		'toolbar',
 		{
 			key: 'jump-to-block',
-			// TODO: add icon
 			template: `${makeToolbarIcon(cmdLabel)}\n`,
 		}
 	);
