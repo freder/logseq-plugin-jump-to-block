@@ -49,17 +49,16 @@ const main = async () => {
 		// </React.StrictMode>
 	);
 
-	// auto open
-	const PageSet = new Set();
+	// auto open palette when opening a page
+	let pagePath = '';
 	logseq.App.onRouteChanged(async (event) => {
 		const autoOpen = logseq.settings?.autoOpen || '';
 		if (autoOpen === true) {
-			if (event && event.template === '/page/:name') {
-				if (!PageSet.has(event.path)) {
-					PageSet.clear();
+			if (event.template === '/page/:name') {
+				if (pagePath !== event.path) {
 					logseq.showMainUI({ autoFocus: false });
 				}
-				await PageSet.add(event.path);
+				pagePath = event.path;
 			}
 		}
 	});
