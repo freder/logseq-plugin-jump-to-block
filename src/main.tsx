@@ -2,24 +2,30 @@ import type {
 	SettingSchemaDesc,
 	SimpleCommandKeybinding
 } from '@logseq/libs/dist/LSPlugin';
+import type { InitalSelectionOption } from './types';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@logseq/libs';
 
 import { makeToolbarIcon } from './toolbar';
+import { defaultMaxDepth, initialSelectionOptionDefault } from './constants';
 import App from './components/App';
+
 
 
 const cmdKey = 'jumpToBlock';
 const cmdLabel = 'Jump to block…';
 const settingsKey = cmdKey;
 const settingsLabel = cmdLabel;
+const initialSelectionOptions: InitalSelectionOption[] = [
+	/* 'Current block', */ 'First block', 'Nothing'
+];
 const settings: SettingSchemaDesc[] = [
 	{
 		key: settingsKey,
 		title: settingsLabel,
-		description: 'Jump to a block within the current page',
+		description: 'Keybinding',
 		default: 'mod+t',
 		type: 'string',
 	},
@@ -29,6 +35,22 @@ const settings: SettingSchemaDesc[] = [
 		description: 'Automatically open the palette on opening a page',
 		default: false,
 		type: 'boolean',
+	},
+	{
+		key: 'initialSelection',
+		title: 'What to select when opening the palette',
+		description: '',
+		default: initialSelectionOptionDefault,
+		type: 'enum',
+		enumChoices: initialSelectionOptions as string[],
+		enumPicker: 'radio',
+	},
+	{
+		key: 'maxDepth',
+		title: 'Maximum block depth',
+		description: 'Limits the depth of blocks to be shown in the palette (0 = root-level)',
+		default: defaultMaxDepth,
+		type: 'number',
 	},
 ];
 
@@ -49,17 +71,16 @@ const main = async () => {
 		// </React.StrictMode>
 	);
 
-	// auto open
-	const PageSet = new Set();
+	// auto open palette when opening a page
+	let pagePath = '';
 	logseq.App.onRouteChanged(async (event) => {
 		const autoOpen = logseq.settings?.autoOpen || '';
 		if (autoOpen === true) {
-			if (event && event.template === '/page/:name') {
-				if (!PageSet.has(event.path)) {
-					PageSet.clear();
+			if (event.template === '/page/:name') {
+				if (pagePath !== event.path) {
 					logseq.showMainUI({ autoFocus: false });
 				}
-				await PageSet.add(event.path);
+				pagePath = event.path;
 			}
 		}
 	});

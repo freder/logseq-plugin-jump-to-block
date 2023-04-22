@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
+import type { InitalSelectionOption } from '../types';
 
 import React, { useEffect, useState, Fragment } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
@@ -11,6 +12,7 @@ import { prepareLabel } from '../utils';
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
 import '../../node_modules/react-command-palette/dist/themes/sublime.css';
+import { defaultMaxDepth, initialSelectionOptionDefault } from '../constants';
 
 
 type PathItem = {
@@ -106,6 +108,52 @@ const makeCommands = (
 };
 
 
+const makeStyles = () => {
+	const computedStyles = getComputedStyle(
+		window.parent.document.documentElement
+	);
+	const bg = computedStyles.getPropertyValue(
+		'--ls-secondary-background-color'
+	);
+	const bgSelection = computedStyles.getPropertyValue(
+		'--ls-a-chosen-bg'
+	);
+	const text = computedStyles.getPropertyValue(
+		'--ls-primary-text-color'
+	);
+	const textSelection = computedStyles.getPropertyValue(
+		'--ls-secondary-text-color'
+	);
+	const input = computedStyles.getPropertyValue(
+		'--ls-primary-background-color'
+	);
+	return css`
+		.sublime-modal, .sublime-suggestionsList .sublime-suggestion {
+			background: ${bg} !important;
+			color: ${text} !important;
+		}
+		.sublime-suggestionsList .sublime-suggestionHighlighted {
+			background: ${bgSelection} !important;
+			color: ${textSelection} !important;
+		}
+		.sublime-suggestion {
+			background: ${bgSelection} !important;
+		}
+		.sublime-input {
+			background: ${input} !important;
+			color: ${text} !important;
+		}
+		*::-webkit-scrollbar-thumb {
+			background-color: ${bgSelection} !important;
+			border: solid 3px ${bg} !important;
+		}
+		.indentation {
+			color: ${bgSelection} !important;
+		}
+	`;
+};
+
+
 function App() {
 	const [open, setOpen] = useState(false);
 	const [items, setItems] = useState<Command[]>([]);
@@ -142,7 +190,10 @@ function App() {
 						return closeHandler();
 					}
 
-					const maxDepth = 3; // TODO: make this configurable
+					const maxDepth: number = Math.max(
+						0,
+						logseq.settings?.maxDepth || defaultMaxDepth
+					);
 					const items = makeCommands(blocks, maxDepth);
 					setItems(items);
 					setOpen(true);
@@ -159,55 +210,19 @@ function App() {
 		[]
 	);
 
-	const computedStyles = getComputedStyle(
-		window.parent.document.documentElement
-	);
-	const bg = computedStyles.getPropertyValue(
-		'--ls-secondary-background-color'
-	);
-	const bgSelection = computedStyles.getPropertyValue(
-		'--ls-a-chosen-bg'
-	);
-	const text = computedStyles.getPropertyValue(
-		'--ls-primary-text-color'
-	);
-	const textSelection = computedStyles.getPropertyValue(
-		'--ls-secondary-text-color'
-	);
-	const input = computedStyles.getPropertyValue(
-		'--ls-primary-background-color'
-	);
+	const initialSelection: InitalSelectionOption = logseq.settings?.initialSelection || initialSelectionOptionDefault;
+	const highlightFirstSuggestion = initialSelection === 'First block';
+	// TODO: implement 'Current block'
+	const defaultInputValue = '';
 
 	return <Fragment>
-		<Global styles={css`
-			.sublime-modal, .sublime-suggestionsList .sublime-suggestion {
-				background: ${bg} !important;
-				color: ${text} !important;
-			}
-			.sublime-suggestionsList .sublime-suggestionHighlighted {
-				background: ${bgSelection} !important;
-				color: ${textSelection} !important;
-			}
-			.sublime-suggestion {
-				background: ${bgSelection} !important;
-			}
-			.sublime-input {
-				background: ${input} !important;
-				color: ${text} !important;
-			}
-			*::-webkit-scrollbar-thumb {
-				background-color: ${bgSelection} !important;
-				border: solid 3px ${bg} !important;
-			}
-			.indentation {
-				color: ${bgSelection} !important;
-			}
-		`} />
+		<Global styles={makeStyles} />
 		<CommandPalette
 			open={open}
 			closeOnSelect
 			alwaysRenderCommands
-			highlightFirstSuggestion
+			highlightFirstSuggestion={highlightFirstSuggestion}
+			defaultInputValue={defaultInputValue}
 			resetInputOnOpen
 			placeholder="Type to filter…"
 			hotKeys={[]}
