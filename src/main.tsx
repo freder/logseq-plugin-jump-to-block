@@ -2,19 +2,25 @@ import type {
 	SettingSchemaDesc,
 	SimpleCommandKeybinding
 } from '@logseq/libs/dist/LSPlugin';
+import type { InitalSelectionOption } from './types';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@logseq/libs';
 
 import { makeToolbarIcon } from './toolbar';
+import { initialSelectionOptionDefault } from './constants';
 import App from './components/App';
+
 
 
 const cmdKey = 'jumpToBlock';
 const cmdLabel = 'Jump to block…';
 const settingsKey = cmdKey;
 const settingsLabel = cmdLabel;
+const initialSelectionOptions: InitalSelectionOption[] = [
+	/* 'Current block', */ 'First block', 'Nothing'
+];
 const settings: SettingSchemaDesc[] = [
 	{
 		key: settingsKey,
@@ -29,6 +35,15 @@ const settings: SettingSchemaDesc[] = [
 		description: 'Automatically open the palette on opening a page',
 		default: false,
 		type: 'boolean',
+	},
+	{
+		key: 'initialSelection',
+		title: 'What to select when opening the palette',
+		description: '',
+		default: initialSelectionOptionDefault,
+		type: 'enum',
+		enumChoices: initialSelectionOptions as string[],
+		enumPicker: 'radio',
 	},
 ];
 

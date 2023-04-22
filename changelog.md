@@ -1,7 +1,8 @@
 # Changelog
 
-## x.x.x
+## 1.4.0
 ### Added
+- Setting for whether the first item should be selected when opening the palette or not (#12)
 
 
 ## 1.3.1

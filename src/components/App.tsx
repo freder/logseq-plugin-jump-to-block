@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
+import type { InitalSelectionOption } from '../types';
 
 import React, { useEffect, useState, Fragment } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
@@ -11,6 +12,7 @@ import { prepareLabel } from '../utils';
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
 import '../../node_modules/react-command-palette/dist/themes/sublime.css';
+import { initialSelectionOptionDefault } from '../constants';
 
 
 type PathItem = {
@@ -205,13 +207,19 @@ function App() {
 		[]
 	);
 
+	const initialSelection: InitalSelectionOption = logseq.settings?.initialSelection || initialSelectionOptionDefault;
+	const highlightFirstSuggestion = initialSelection === 'First block';
+	// TODO: implement 'Current block'
+	const defaultInputValue = '';
+
 	return <Fragment>
 		<Global styles={makeStyles} />
 		<CommandPalette
 			open={open}
 			closeOnSelect
 			alwaysRenderCommands
-			highlightFirstSuggestion
+			highlightFirstSuggestion={highlightFirstSuggestion}
+			defaultInputValue={defaultInputValue}
 			resetInputOnOpen
 			placeholder="Type to filter…"
 			hotKeys={[]}
