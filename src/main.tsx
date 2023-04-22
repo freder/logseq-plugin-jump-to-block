@@ -25,7 +25,7 @@ const settings: SettingSchemaDesc[] = [
 	{
 		key: settingsKey,
 		title: settingsLabel,
-		description: 'Jump to a block within the current page',
+		description: 'Keybinding',
 		default: 'mod+t',
 		type: 'string',
 	},
