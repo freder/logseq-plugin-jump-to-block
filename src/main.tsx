@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom/client';
 import '@logseq/libs';
 
 import { makeToolbarIcon } from './toolbar';
-import { initialSelectionOptionDefault } from './constants';
+import { defaultMaxDepth, initialSelectionOptionDefault } from './constants';
 import App from './components/App';
 
 
@@ -44,6 +44,13 @@ const settings: SettingSchemaDesc[] = [
 		type: 'enum',
 		enumChoices: initialSelectionOptions as string[],
 		enumPicker: 'radio',
+	},
+	{
+		key: 'maxDepth',
+		title: 'Maximum block depth',
+		description: 'Limits the depth of blocks to be shown in the palette (0 = root-level)',
+		default: defaultMaxDepth,
+		type: 'number',
 	},
 ];
 

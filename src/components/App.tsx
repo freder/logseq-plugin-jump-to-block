@@ -12,7 +12,7 @@ import { prepareLabel } from '../utils';
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
 import '../../node_modules/react-command-palette/dist/themes/sublime.css';
-import { initialSelectionOptionDefault } from '../constants';
+import { defaultMaxDepth, initialSelectionOptionDefault } from '../constants';
 
 
 type PathItem = {
@@ -190,7 +190,10 @@ function App() {
 						return closeHandler();
 					}
 
-					const maxDepth = 3; // TODO: make this configurable
+					const maxDepth: number = Math.max(
+						0,
+						logseq.settings?.maxDepth || defaultMaxDepth
+					);
 					const items = makeCommands(blocks, maxDepth);
 					setItems(items);
 					setOpen(true);
