@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { BlockEntity } from '@logseq/libs/dist/LSPlugin.user';
-import type { InitalSelectionOption } from '../types';
+import type { InitalSelectionOption, ModeOption } from '../types';
 
 import React, { useEffect, useState, Fragment } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
@@ -8,11 +8,16 @@ import * as R from 'ramda';
 import { Global, css } from '@emotion/react';
 
 import { prepareLabel } from '../utils';
+import {
+	defaultMaxDepth,
+	headingRegex,
+	initialSelectionDefault,
+	modeDefault
+} from '../constants';
 
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
 import '../../node_modules/react-command-palette/dist/themes/sublime.css';
-import { defaultMaxDepth, initialSelectionDefault } from '../constants';
 
 
 type PathItem = {
@@ -59,6 +64,7 @@ const selectionHandler = async (
 
 const makeCommands = (
 	blocks: BlockEntity[],
+	mode: ModeOption,
 	maxDepth = Infinity
 ) => {
 	const items: Command[] = [];
@@ -67,10 +73,27 @@ const makeCommands = (
 		depth: number,
 		path: Array<PathItem>
 	) => {
-		if (depth > maxDepth) {
-			return;
+		if (mode === 'Default') {
+			if (depth > maxDepth) {
+				return;
+			}
 		}
+
 		const blockContent = (block.content || '').trim();
+
+		if (mode === 'Headings-only') {
+			// ignore non-headings
+			if (!headingRegex.test(blockContent)) {
+				return;
+			}
+			const level = R.takeWhile(
+				(c) => c === '#',
+				blockContent.split('')
+			).length;
+			if (level > maxDepth) {
+				return;
+			}
+		}
 
 		// ignore empty blocks
 		if (blockContent === '') { return; }
@@ -155,6 +178,8 @@ const makeStyles = () => {
 
 
 function App() {
+	const mode: ModeOption = logseq.settings?.mode || modeDefault;
+
 	const [open, setOpen] = useState(false);
 	const [items, setItems] = useState<Command[]>([]);
 
@@ -194,7 +219,7 @@ function App() {
 						0,
 						logseq.settings?.maxDepth || defaultMaxDepth
 					);
-					const items = makeCommands(blocks, maxDepth);
+					const items = makeCommands(blocks, mode, maxDepth);
 					setItems(items);
 					setOpen(true);
 				} else {
@@ -207,7 +232,7 @@ function App() {
 				logseq.off('ui:visible:changed', visibilityHandler);
 			};
 		},
-		[]
+		[mode]
 	);
 
 	const initialSelection: InitalSelectionOption = logseq.settings?.initialSelection || initialSelectionDefault;

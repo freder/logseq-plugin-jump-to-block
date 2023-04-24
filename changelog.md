@@ -1,9 +1,13 @@
 # Changelog
 
+## 1.5.0
+### Added
+- "Headings-only" mode will only list headings (#18)
+
 ## 1.4.0
 ### Added
 - Setting for whether the first item should be selected when opening the palette or not (#12)
-- Setting configuring the max. depth of the displayed items (#14)
+- Setting for configuring the max. depth of the displayed items (#14)
 
 
 ## 1.3.1
