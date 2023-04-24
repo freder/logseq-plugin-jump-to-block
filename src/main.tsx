@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom/client';
 import '@logseq/libs';
 
 import { makeToolbarIcon } from './toolbar';
-import { defaultMaxDepth, initialSelectionOptionDefault } from './constants';
+import { defaultMaxDepth, initialSelectionDefault } from './constants';
 import App from './components/App';
 
 
@@ -40,7 +40,7 @@ const settings: SettingSchemaDesc[] = [
 		key: 'initialSelection',
 		title: 'What to select when opening the palette',
 		description: '',
-		default: initialSelectionOptionDefault,
+		default: initialSelectionDefault,
 		type: 'enum',
 		enumChoices: initialSelectionOptions as string[],
 		enumPicker: 'radio',

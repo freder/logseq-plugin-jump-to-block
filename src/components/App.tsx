@@ -12,7 +12,7 @@ import { prepareLabel } from '../utils';
 // @ts-ignore
 import theme from '../../node_modules/react-command-palette/dist/themes/sublime-theme';
 import '../../node_modules/react-command-palette/dist/themes/sublime.css';
-import { defaultMaxDepth, initialSelectionOptionDefault } from '../constants';
+import { defaultMaxDepth, initialSelectionDefault } from '../constants';
 
 
 type PathItem = {
@@ -210,7 +210,7 @@ function App() {
 		[]
 	);
 
-	const initialSelection: InitalSelectionOption = logseq.settings?.initialSelection || initialSelectionOptionDefault;
+	const initialSelection: InitalSelectionOption = logseq.settings?.initialSelection || initialSelectionDefault;
 	const highlightFirstSuggestion = initialSelection === 'First block';
 	// TODO: implement 'Current block'
 	const defaultInputValue = '';
