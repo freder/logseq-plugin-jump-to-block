@@ -2,16 +2,19 @@ import type {
 	SettingSchemaDesc,
 	SimpleCommandKeybinding
 } from '@logseq/libs/dist/LSPlugin';
-import type { InitalSelectionOption } from './types';
+import type { InitalSelectionOption, ModeOption } from './types';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@logseq/libs';
 
 import { makeToolbarIcon } from './toolbar';
-import { defaultMaxDepth, initialSelectionOptionDefault } from './constants';
+import {
+	defaultMaxDepth,
+	initialSelectionDefault,
+	modeDefault
+} from './constants';
 import App from './components/App';
-
 
 
 const cmdKey = 'jumpToBlock';
@@ -21,6 +24,9 @@ const settingsLabel = cmdLabel;
 const initialSelectionOptions: InitalSelectionOption[] = [
 	/* 'Current block', */ 'First block', 'Nothing'
 ];
+const modeOptions: ModeOption[] = [
+	'Default', 'Headings-only'
+];
 const settings: SettingSchemaDesc[] = [
 	{
 		key: settingsKey,
@@ -28,6 +34,15 @@ const settings: SettingSchemaDesc[] = [
 		description: 'Keybinding',
 		default: 'mod+t',
 		type: 'string',
+	},
+	{
+		key: 'mode',
+		title: 'Mode',
+		description: '',
+		default: modeDefault,
+		type: 'enum',
+		enumChoices: modeOptions as string[],
+		enumPicker: 'radio',
 	},
 	{
 		key: 'autoOpen',
@@ -40,7 +55,7 @@ const settings: SettingSchemaDesc[] = [
 		key: 'initialSelection',
 		title: 'What to select when opening the palette',
 		description: '',
-		default: initialSelectionOptionDefault,
+		default: initialSelectionDefault,
 		type: 'enum',
 		enumChoices: initialSelectionOptions as string[],
 		enumPicker: 'radio',
@@ -48,7 +63,7 @@ const settings: SettingSchemaDesc[] = [
 	{
 		key: 'maxDepth',
 		title: 'Maximum block depth',
-		description: 'Limits the depth of blocks to be shown in the palette (0 = root-level)',
+		description: 'Limits the depth of blocks to be shown in the palette.',
 		default: defaultMaxDepth,
 		type: 'number',
 	},
