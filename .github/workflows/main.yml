@@ -33,7 +33,7 @@ jobs:
       - run: node scripts/make-release-note.js
       - name: Install zip
         uses: montudor/action-zip@v1
-      - run: zip -r dist.zip ./dist package.json
+      - run: zip -r dist.zip ./dist package.json ./marketplace/icon.png
       - name: release
         uses: actions/create-release@v1
         id: create_release
