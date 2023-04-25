@@ -3,7 +3,9 @@
   "version": "1.5.0",
   "main": "dist/index.html",
   "logseq": {
-    "id": "logseq-plugin-jump-to-block"
+    "id": "logseq-plugin-jump-to-block",
+	"title": "Jump to Block",
+	"icon": "marketplace/icon.png"
   },
   "scripts": {
     "lint": "eslint ./src",
