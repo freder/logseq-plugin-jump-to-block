@@ -52,11 +52,11 @@ const selectionHandler = async (
 		return;
 	}
 	if (expand) {
-		await Promise.all(
-			R.dropLast(1, item.path as PathItem[])
-				.filter((pathItem) => pathItem.collapsed)
-				.map(({ uuid }) => logseq.Editor.setBlockCollapsed(uuid, false))
-		);
+		const collapsedItems = R.dropLast(1, item.path as PathItem[])
+			.filter((pathItem) => pathItem.collapsed);
+		for (const item of collapsedItems) {
+			await logseq.Editor.setBlockCollapsed(item.uuid, false);
+		}
 	}
 	scrollTo(item.id as string);
 };
