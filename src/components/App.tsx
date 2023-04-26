@@ -67,7 +67,7 @@ const makeCommands = (
 	mode: ModeOption,
 	maxDepth = Infinity
 ) => {
-	const items: Command[] = [];
+	const entries: Command[] = [];
 
 	const recurse = (
 		block: BlockEntity,
@@ -110,7 +110,7 @@ const makeCommands = (
 			color: 'transparent',
 			path: path,
 		};
-		items.push(cmd);
+		entries.push(cmd);
 
 		const children = block.children || [];
 		if (children.length) {
@@ -131,7 +131,7 @@ const makeCommands = (
 	blocks.forEach(
 		(block) => recurse(block, 0, [])
 	);
-	return items;
+	return entries;
 };
 
 
