@@ -52,13 +52,13 @@ const selectionHandler = async (
 		return;
 	}
 	if (expand) {
-		await Promise.all(
-			R.dropLast(1, item.path as PathItem[])
-				.filter((pathItem) => pathItem.collapsed)
-				.map(({ uuid }) => logseq.Editor.setBlockCollapsed(uuid, false))
-		);
+		const collapsedItems = (item.path as PathItem[])
+			.filter((pathItem) => pathItem.collapsed);
+		for (const item of collapsedItems) {
+			await logseq.Editor.setBlockCollapsed(item.uuid, false);
+		}
 	}
-	if (item) scrollTo(item.id as string);
+	scrollTo(item.id as string);
 };
 
 
@@ -67,7 +67,8 @@ const makeCommands = (
 	mode: ModeOption,
 	maxDepth = Infinity
 ) => {
-	const items: Command[] = [];
+	const entries: Command[] = [];
+
 	const recurse = (
 		block: BlockEntity,
 		depth: number,
@@ -109,25 +110,28 @@ const makeCommands = (
 			color: 'transparent',
 			path: path,
 		};
-		items.push(cmd);
+		entries.push(cmd);
+
 		const children = block.children || [];
 		if (children.length) {
+			const parentPathItem: PathItem = {
+				uuid: block.uuid,
+				collapsed: block['collapsed?'],
+			};
 			(children as BlockEntity[]).forEach(
-				(block) => recurse(
-					block,
+				(child) => recurse(
+					child,
 					depth + 1,
-					[...path, {
-						uuid: block.uuid,
-						collapsed: block['collapsed?'],
-					}]
+					[...path, parentPathItem]
 				)
 			);
 		}
 	};
+
 	blocks.forEach(
 		(block) => recurse(block, 0, [])
 	);
-	return items;
+	return entries;
 };
 
 
