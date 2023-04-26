@@ -58,7 +58,7 @@ const selectionHandler = async (
 				.map(({ uuid }) => logseq.Editor.setBlockCollapsed(uuid, false))
 		);
 	}
-	if (item) scrollTo(item.id as string);
+	scrollTo(item.id as string);
 };
 
 
