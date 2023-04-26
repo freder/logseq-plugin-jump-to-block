@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.x.x
+## 1.5.2
 ### Fixed
 - Fixed bug where expanding collapsed blocks wasn't working properly
 
