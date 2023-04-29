@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.x.x
+## 1.5.3
 ### Fixed
 - Improved regular expressions for label rendering (to filter out keywords, properties, etc.)
 
