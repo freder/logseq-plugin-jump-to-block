@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.3
+### Fixed
+- Improved regular expressions for label rendering (to filter out keywords, properties, etc.)
+
 ## 1.5.2
 ### Fixed
 - Fixed bug where expanding collapsed blocks wasn't working properly

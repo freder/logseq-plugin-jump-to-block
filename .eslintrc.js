@@ -13,7 +13,7 @@ module.exports = {
 	env: {
 		browser: true,
 		es2021: true,
-		// 'jest/globals': true,
+		'jest/globals': true,
 	},
 	globals: {
 		// React: true,
@@ -25,7 +25,7 @@ module.exports = {
 		'react-hooks',
 		// 'jsx-a11y',
 		'@typescript-eslint',
-		// 'jest',
+		'jest',
 		'functional',
 		// 'fp',
 		// 'better-mutation',
@@ -37,7 +37,7 @@ module.exports = {
 		'plugin:react/recommended',
 		// 'plugin:jsx-a11y/recommended',
 		// 'plugin:import/recommended',
-		// 'plugin:jest/recommended',
+		'plugin:jest/recommended',
 		// 'plugin:functional/external-recommended',
 		// 'plugin:functional/recommended',
 		// 'plugin:functional/stylistic',
