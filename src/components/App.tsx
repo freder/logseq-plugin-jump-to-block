@@ -28,20 +28,17 @@ type PathItem = {
 
 
 const scrollTo = async (blockUuid: string) => {
-	const pageOrBlock = (await logseq.Editor.getCurrentPage());
-	const isBlock = ('content' in (pageOrBlock || {}));
-	if (!pageOrBlock) {
-		return console.error('failed to get page or block');
+	// NOTE: we're not using `logseq.Editor.scrollToBlockInPage`
+	// as it only works on pages and not in zoomed in views
+	const id = 'block-content-' + blockUuid;
+	const elem = window.parent.document.getElementById(id);
+	if (elem) {
+		elem.scrollIntoView({ behavior: 'smooth' });
+	} else {
+		console.error('failed to find block element');
 	}
-	const page = isBlock
-		? await logseq.Editor.getPage(pageOrBlock.page.id)
-		: pageOrBlock;
-	if (!page) {
-		return console.error('failed to get page');
-	}
-	// TODO: how to scroll to block in sub-tree without leaving the sub-tree?
-	// `scrollToBlockInPage()` will open the entire page
-	logseq.Editor.scrollToBlockInPage(page.name, blockUuid);
+	// @ts-expect-error
+	window.parent.logseq.api.select_block(blockUuid);
 };
 
 
@@ -60,6 +57,7 @@ const selectionHandler = async (
 		}
 	}
 	scrollTo(item.id as string);
+	// TODO: push state?
 };
 
 
