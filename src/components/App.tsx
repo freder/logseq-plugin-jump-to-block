@@ -28,20 +28,21 @@ type PathItem = {
 
 
 const scrollTo = async (blockUuid: string) => {
-	const pageOrBlock = (await logseq.Editor.getCurrentPage());
-	const isBlock = ('content' in (pageOrBlock || {}));
-	if (!pageOrBlock) {
-		return console.error('failed to get page or block');
+	// we're not using `logseq.Editor.scrollToBlockInPage`
+	// as it only works on pages and not in zoomed in views.
+	// custom solution: scroll to the block and select it.
+
+	// for reference: https://github.com/logseq/logseq/blob/0.9.4/libs/src/LSPlugin.user.ts#L368
+	const id = 'block-content-' + blockUuid;
+	const elem = window.parent.document.getElementById(id);
+	if (elem) {
+		elem.scrollIntoView({ behavior: 'smooth' });
+		// @ts-expect-error
+		window.parent.logseq.api.select_block(blockUuid);
+	} else {
+		// this happens for children of collapsed blocks
+		// console.error('failed to find block element');
 	}
-	const page = isBlock
-		? await logseq.Editor.getPage(pageOrBlock.page.id)
-		: pageOrBlock;
-	if (!page) {
-		return console.error('failed to get page');
-	}
-	// TODO: how to scroll to block in sub-tree without leaving the sub-tree?
-	// `scrollToBlockInPage()` will open the entire page
-	logseq.Editor.scrollToBlockInPage(page.name, blockUuid);
 };
 
 
@@ -60,6 +61,7 @@ const selectionHandler = async (
 		}
 	}
 	scrollTo(item.id as string);
+	// TODO: push state?
 };
 
 
@@ -156,8 +158,8 @@ function App() {
 						return closeHandler();
 					}
 
-					// NOTE: `logseq.Editor.getCurrentPageBlocksTree()` won't return anything if
-					// we're in a sub-tree rather than a full page.
+					// `getCurrentPageBlocksTree()` won't return anything
+					// if we're in a sub-tree rather than a full page.
 					let blocks: BlockEntity[] = [];
 					if ('content' in pageOrBlock) {
 						const block = await logseq.Editor.getBlock(
