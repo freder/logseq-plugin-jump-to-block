@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.x.x
+## 1.6.0
 ### Fixed
 - Plugin works in zoomed in view (sub-trees) now!
 
