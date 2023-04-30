@@ -148,10 +148,33 @@ function App() {
 		logseq.hideMainUI();
 	};
 
+	logseq.Editor.getAllPages().then(async (allPages) => {
+		const journalPages_ = allPages?.filter(
+			(page) => page['journal?'] === true
+		) || [];
+		console.log(journalPages_);
+		// let journalPages: BlockEntity[] = [];
+		for (const page of journalPages_) {
+			// this does not seem to include children!
+			// const blocks = await logseq.Editor.getPage(
+			// 	page.uuid,
+			// 	{ includeChildren: true }
+			// );
+
+			const pageBlocks = await logseq.Editor.getPageBlocksTree(page.uuid);
+			console.log(pageBlocks);
+		}
+	});
+
 	useEffect(
 		() => {
 			const visibilityHandler = async ({ visible }: { visible: boolean }) => {
 				if (visible) {
+					const block = await logseq.Editor.getCurrentBlock();
+					if (block) {
+						console.log(block.page);
+					}
+
 					const pageOrBlock = await logseq.Editor.getCurrentPage();
 					if (!pageOrBlock) {
 						logseq.UI.showMsg('This page is not supported', 'warning');
