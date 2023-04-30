@@ -5,9 +5,10 @@ import type { InitalSelectionOption, ModeOption } from '../types';
 import React, { useEffect, useState, Fragment } from 'react';
 import CommandPalette, { Command } from 'react-command-palette';
 import * as R from 'ramda';
-import { Global, css } from '@emotion/react';
+import { Global } from '@emotion/react';
 
 import { prepareLabel } from '../utils';
+import { makeStyles } from '../utils/theme';
 import {
 	defaultMaxDepth,
 	headingRegex,
@@ -27,20 +28,21 @@ type PathItem = {
 
 
 const scrollTo = async (blockUuid: string) => {
-	const pageOrBlock = (await logseq.Editor.getCurrentPage());
-	const isBlock = ('content' in (pageOrBlock || {}));
-	if (!pageOrBlock) {
-		return console.error('failed to get page or block');
+	// we're not using `logseq.Editor.scrollToBlockInPage`
+	// as it only works on pages and not in zoomed in views.
+	// custom solution: scroll to the block and select it.
+
+	// for reference: https://github.com/logseq/logseq/blob/0.9.4/libs/src/LSPlugin.user.ts#L368
+	const id = 'block-content-' + blockUuid;
+	const elem = window.parent.document.getElementById(id);
+	if (elem) {
+		elem.scrollIntoView({ behavior: 'smooth' });
+		// @ts-expect-error
+		window.parent.logseq.api.select_block(blockUuid);
+	} else {
+		// this happens for children of collapsed blocks
+		// console.error('failed to find block element');
 	}
-	const page = isBlock
-		? await logseq.Editor.getPage(pageOrBlock.page.id)
-		: pageOrBlock;
-	if (!page) {
-		return console.error('failed to get page');
-	}
-	// TODO: how to scroll to block in sub-tree without leaving the sub-tree?
-	// `scrollToBlockInPage()` will open the entire page
-	logseq.Editor.scrollToBlockInPage(page.name, blockUuid);
 };
 
 
@@ -59,6 +61,7 @@ const selectionHandler = async (
 		}
 	}
 	scrollTo(item.id as string);
+	// TODO: push state?
 };
 
 
@@ -135,52 +138,6 @@ const makeCommands = (
 };
 
 
-const makeStyles = () => {
-	const computedStyles = getComputedStyle(
-		window.parent.document.documentElement
-	);
-	const bg = computedStyles.getPropertyValue(
-		'--ls-secondary-background-color'
-	);
-	const bgSelection = computedStyles.getPropertyValue(
-		'--ls-a-chosen-bg'
-	);
-	const text = computedStyles.getPropertyValue(
-		'--ls-primary-text-color'
-	);
-	const textSelection = computedStyles.getPropertyValue(
-		'--ls-secondary-text-color'
-	);
-	const input = computedStyles.getPropertyValue(
-		'--ls-primary-background-color'
-	);
-	return css`
-		.sublime-modal, .sublime-suggestionsList .sublime-suggestion {
-			background: ${bg} !important;
-			color: ${text} !important;
-		}
-		.sublime-suggestionsList .sublime-suggestionHighlighted {
-			background: ${bgSelection} !important;
-			color: ${textSelection} !important;
-		}
-		.sublime-suggestion {
-			background: ${bgSelection} !important;
-		}
-		.sublime-input {
-			background: ${input} !important;
-			color: ${text} !important;
-		}
-		*::-webkit-scrollbar-thumb {
-			background-color: ${bgSelection} !important;
-			border: solid 3px ${bg} !important;
-		}
-		.indentation {
-			color: ${bgSelection} !important;
-		}
-	`;
-};
-
-
 function App() {
 	const mode: ModeOption = logseq.settings?.mode || modeDefault;
 
@@ -201,8 +158,8 @@ function App() {
 						return closeHandler();
 					}
 
-					// NOTE: `logseq.Editor.getCurrentPageBlocksTree()` won't return anything if
-					// we're in a sub-tree rather than a full page.
+					// `getCurrentPageBlocksTree()` won't return anything
+					// if we're in a sub-tree rather than a full page.
 					let blocks: BlockEntity[] = [];
 					if ('content' in pageOrBlock) {
 						const block = await logseq.Editor.getBlock(
@@ -245,7 +202,7 @@ function App() {
 	const defaultInputValue = '';
 
 	return <Fragment>
-		<Global styles={makeStyles} />
+		<Global styles={makeStyles()} />
 		<CommandPalette
 			open={open}
 			closeOnSelect

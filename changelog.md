@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.0
+### Fixed
+- Plugin works in zoomed in view (sub-trees) now!
+
 ## 1.5.3
 ### Fixed
 - Improved regular expressions for label rendering (to filter out keywords, properties, etc.)

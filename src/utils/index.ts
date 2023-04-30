@@ -10,7 +10,7 @@ export const cleanLabel = (s: string) => {
 		.replaceAll(/\{:.*\}/gi, '')
 		.replaceAll(/^(TODO|DOING|DONE|NOW|LATER) /g, '')
 		.trim();
-}
+};
 
 
 export const prepareLabel = (blockContent: string) => {
