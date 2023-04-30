@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# only allow pushing to this branch if all tests pass
+protected_branch='develop'
+
+current_branch=`git branch --show-current`
+
+if [[ $current_branch = $protected_branch ]]; then
+	source ~/.nvm/nvm.sh
+	nvm use node
+    npm run test
+    result=$?
+    if [ $result -ne 0 ]; then
+        echo "tests failed!"
+        exit 1
+    fi
+fi
+exit 0
