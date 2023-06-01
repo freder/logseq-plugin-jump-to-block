@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
-    "@logseq/libs": "^0.0.14",
+    "@logseq/libs": "^0.0.15",
     "lodash": "^4.17.21",
     "markdown-to-txt": "^2.0.1",
     "ramda": "^0.28.0",
