@@ -7,11 +7,10 @@ import CommandPalette, { Command } from 'react-command-palette';
 import * as R from 'ramda';
 import { Global } from '@emotion/react';
 
-import { prepareLabel } from '../utils';
+import { checkIsHeading, prepareLabel } from '../utils';
 import { makeStyles } from '../utils/theme';
 import {
 	defaultMaxDepth,
-	headingRegex,
 	initialSelectionDefault,
 	modeDefault
 } from '../constants';
@@ -87,7 +86,7 @@ const makeCommands = (
 
 		if (mode === 'Headings-only') {
 			// ignore non-headings
-			if (!headingRegex.test(blockContent)) {
+			if (!checkIsHeading(blockContent)) {
 				return;
 			}
 			const level = R.takeWhile(

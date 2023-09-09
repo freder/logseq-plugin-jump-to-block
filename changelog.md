@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.X
+### Fixed
+- Fixed bug where _headings-only_ mode wasn't working correctly (#22)
+
 ## 1.6.0
 ### Fixed
 - Plugin works in zoomed in view (sub-trees) now!
