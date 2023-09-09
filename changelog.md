@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.X
+## 1.6.1
 ### Fixed
 - Fixed bug where _headings-only_ mode wasn't working correctly (#22)
 
