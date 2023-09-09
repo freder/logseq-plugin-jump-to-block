@@ -16,3 +16,8 @@ export const cleanLabel = (s: string) => {
 export const prepareLabel = (blockContent: string) => {
 	return cleanLabel(markdownToTxt(blockContent));
 };
+
+
+export const checkIsHeading = (blockContent: string) => {
+	return blockContent.match(/^#+ .*/gi);
+};
